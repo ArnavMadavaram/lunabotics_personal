@@ -1,0 +1,66 @@
+# =============================================================================
+# Lunabotics Global Costmap Configuration
+# Reference: Lunabotics_Software_Team-2 (Sections 4.2, 5, 6, 7)
+#
+# Node path: /global_costmap/costmap
+# Hazard topics (from hazard_detection package, not yet built):
+#   /hazards/rocks/cloud    -> PointCloud2 rock obstacles
+#   /hazards/craters/grid   -> OccupancyGrid crater keepout
+# =============================================================================
+
+costmap:
+  costmap:
+    ros__parameters:
+      update_frequency: 1.0
+      publish_frequency: 1.0
+
+      global_frame: map
+      robot_base_frame: base_link
+
+      rolling_window: false
+      width: 12         # meters (integer required by Nav2)
+      height: 12        # meters (integer required by Nav2)
+      resolution: 0.05  # 5 cm/cell -> 240x240 grid
+      origin_x: -6.0    # center map on robot at (0,0)
+      origin_y: -6.0
+
+      # TODO: update with real robot dimensions once CAD is confirmed
+      footprint: "[[0.35, 0.30], [0.35, -0.30], [-0.35, -0.30], [-0.35, 0.30]]"
+      footprint_padding: 0.05
+
+      always_send_full_costmap: true
+
+      # Plugin stack (in evaluation order):
+      #   rock_obstacle_layer  — LiDAR rocks via ObstacleLayer
+      #   crater_keepout_layer — crater grid injected as lethal (StaticLayer)
+      #   inflation_layer      — safety buffer around all obstacles
+      plugins: ["arena_layer", "rock_layer", "crater_keepout_layer", "inflation_layer"]
+
+      arena_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        enabled: true
+        map_topic: /hazards/arena/grid
+        map_subscribe_transient_local: false
+        subscribe_to_updates: true
+
+      # Rocks published as OccupancyGrid for reliable demo visualization.
+      # In production this will be an ObstacleLayer fed by real LiDAR PointCloud2.
+      rock_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        enabled: true
+        map_topic: /hazards/rocks/grid
+        map_subscribe_transient_local: false
+        subscribe_to_updates: true
+
+      crater_keepout_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        enabled: true
+        map_topic: /hazards/craters/grid
+        map_subscribe_transient_local: false
+        subscribe_to_updates: true
+
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        enabled: true
+        inflation_radius: 0.40
+        cost_scaling_factor: 3.0

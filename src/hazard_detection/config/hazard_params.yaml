@@ -1,0 +1,11 @@
+hazard_node:
+  ros__parameters:
+    roi_x_min: 0.05
+    roi_x_max: 4.0
+    roi_y_max: 2.0
+    ground_tolerance: 0.05
+    rock_threshold: 0.10
+    crater_threshold: 0.08
+    grid_resolution: 0.08
+    inflation_radius: 0.30
+    publish_rate: 8.0

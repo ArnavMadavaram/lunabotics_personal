@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<robot name="lunabot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- =========================================================
+       Lunabotics Skid-Steer Mining Robot — URDF
+       All dimensions marked PLACEHOLDER must be measured from
+       hardware/CAD and replaced before integration testing.
+       ========================================================= -->
+
+  <!-- =========================================================
+       Inertial macro helpers
+       ========================================================= -->
+
+  <!-- Solid box inertia: mass m, dimensions x y z -->
+  <xacro:macro name="box_inertia" params="m x y z">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia
+        ixx="${m*(y*y + z*z)/12}" ixy="0" ixz="0"
+        iyy="${m*(x*x + z*z)/12}" iyz="0"
+        izz="${m*(x*x + y*y)/12}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- Solid cylinder inertia: mass m, radius r, length l (along Z) -->
+  <xacro:macro name="cylinder_inertia" params="m r l">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia
+        ixx="${m*(3*r*r + l*l)/12}" ixy="0" ixz="0"
+        iyy="${m*(3*r*r + l*l)/12}" iyz="0"
+        izz="${m*r*r/2}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- =========================================================
+       base_link — main chassis
+       PLACEHOLDER: measure actual chassis from CAD/hardware
+       ========================================================= -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <!-- PLACEHOLDER: measure and replace (length x width x height) -->
+        <box size="0.8 0.5 0.2"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <!-- PLACEHOLDER: measure and replace (length x width x height) -->
+        <box size="0.8 0.5 0.2"/>
+      </geometry>
+    </collision>
+    <!-- PLACEHOLDER: replace mass with actual chassis mass in kg -->
+    <xacro:box_inertia m="20.0" x="0.8" y="0.5" z="0.2"/>
+  </link>
+
+  <!-- =========================================================
+       left_wheel
+       PLACEHOLDER: measure wheel radius and width from hardware
+       ========================================================= -->
+  <link name="left_wheel">
+    <visual>
+      <geometry>
+        <!-- PLACEHOLDER: measure and replace radius and length -->
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+      <material name="dark_grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <!-- PLACEHOLDER: measure and replace radius and length -->
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+    </collision>
+    <!-- PLACEHOLDER: replace mass with actual wheel mass in kg -->
+    <xacro:cylinder_inertia m="1.5" r="0.1" l="0.05"/>
+  </link>
+
+  <!-- =========================================================
+       right_wheel
+       PLACEHOLDER: measure wheel radius and width from hardware
+       ========================================================= -->
+  <link name="right_wheel">
+    <visual>
+      <geometry>
+        <!-- PLACEHOLDER: measure and replace radius and length -->
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+      <material name="dark_grey">
+        <color rgba="0.2 0.2 0.2 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <!-- PLACEHOLDER: measure and replace radius and length -->
+        <cylinder radius="0.1" length="0.05"/>
+      </geometry>
+    </collision>
+    <!-- PLACEHOLDER: replace mass with actual wheel mass in kg -->
+    <xacro:cylinder_inertia m="1.5" r="0.1" l="0.05"/>
+  </link>
+
+  <!-- =========================================================
+       unitree_lidar_link — Unitree L2 3D LiDAR
+       Dimensions from L2 datasheet: 75mm × 75mm × 65mm
+       PLACEHOLDER: verify exact mount position from CAD
+       ========================================================= -->
+  <link name="unitree_lidar_link">
+    <visual>
+      <geometry>
+        <!-- Unitree L2 actual dimensions — verify with datasheet -->
+        <box size="0.075 0.075 0.065"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.075 0.075 0.065"/>
+      </geometry>
+    </collision>
+    <!-- PLACEHOLDER: replace mass with actual LiDAR mass (Unitree L2 ~0.65kg) -->
+    <xacro:box_inertia m="0.65" x="0.075" y="0.075" z="0.065"/>
+  </link>
+
+  <!-- =========================================================
+       imu_link — onboard IMU
+       PLACEHOLDER: measure actual IMU board dimensions and mount
+       ========================================================= -->
+  <link name="imu_link">
+    <visual>
+      <geometry>
+        <!-- PLACEHOLDER: measure and replace actual IMU PCB size -->
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+      <material name="green">
+        <color rgba="0.0 0.8 0.0 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <!-- PLACEHOLDER: measure and replace actual IMU PCB size -->
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+    </collision>
+    <!-- PLACEHOLDER: replace mass with actual IMU mass in kg -->
+    <xacro:box_inertia m="0.05" x="0.02" y="0.02" z="0.02"/>
+  </link>
+
+  <!-- =========================================================
+       Joints
+       ========================================================= -->
+
+  <!-- Left wheel: continuous (driven), offset to left side (+Y) and down (-Z) -->
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <!-- PLACEHOLDER: measure actual wheel axle position from chassis center -->
+    <origin xyz="0.0 0.275 -0.1" rpy="${pi/2} 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <!-- Right wheel: continuous (driven), offset to right side (-Y) and down (-Z) -->
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <!-- PLACEHOLDER: measure actual wheel axle position from chassis center -->
+    <origin xyz="0.0 -0.275 -0.1" rpy="${pi/2} 0 0"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <!-- LiDAR: fixed, mounted on top of chassis -->
+  <joint name="lidar_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="unitree_lidar_link"/>
+    <!-- PLACEHOLDER: measure exact LiDAR mount position from chassis center -->
+    <origin xyz="0.0 0.0 0.3" rpy="0 0 0"/>
+  </joint>
+
+  <!-- IMU: fixed, mounted on chassis -->
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <!-- PLACEHOLDER: measure exact IMU mount position from chassis center -->
+    <origin xyz="0.0 0.0 0.1" rpy="0 0 0"/>
+  </joint>
+
+</robot>

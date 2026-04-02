@@ -1,0 +1,10 @@
+# Teleop Twist Keyboard configuration for Lunabotics skid-steer robot
+# Published on /cmd_vel (geometry_msgs/Twist)
+#
+# PLACEHOLDER: tune speed limits to match actual motor controller limits
+teleop_twist_keyboard:
+  ros__parameters:
+    speed: 0.3        # linear speed m/s — PLACEHOLDER: tune to safe max for arena
+    turn: 0.5         # angular speed rad/s — PLACEHOLDER: tune to safe skid-steer max
+    speed_limit: 0.5  # hard cap m/s
+    turn_limit: 1.0   # hard cap rad/s
