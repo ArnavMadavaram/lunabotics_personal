@@ -4,7 +4,10 @@
 # =============================================================================
 
 # ---------------------------------------------------------------------------
-# Global Costmap — 5 layers, 10x10m, 0.05m resolution, 1 Hz
+# Global Costmap — 5 layers, size driven by static arena map, 1 Hz
+# width/height/resolution intentionally omitted: with rolling_window: false
+# and a StaticLayer present, Nav2 sizes the costmap from the static map.
+# Explicit size was fighting the StaticLayer and producing a 4x4m window.
 # ---------------------------------------------------------------------------
 global_costmap:
   global_costmap:
@@ -14,9 +17,6 @@ global_costmap:
       global_frame: map
       robot_base_frame: base_link
       rolling_window: false
-      width: 10
-      height: 10
-      resolution: 0.05
       robot_radius: 0.25
       always_send_full_costmap: true
 
