@@ -1,0 +1,9 @@
+point_lio_sim:
+  ros__parameters:
+    # Gaussian position drift magnitude per second (metres)
+    # Simulates the small continuous drift of a real LiDAR-inertial odometry system
+    drift_sigma: 0.001
+
+    # If true, the node will publish a fake /imu/data at 200 Hz when no
+    # external IMU source is detected within the first 2 seconds
+    publish_fake_imu: true

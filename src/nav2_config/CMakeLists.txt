@@ -5,7 +5,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclpy REQUIRED)
 
-install(DIRECTORY config launch maps scripts
+install(DIRECTORY config launch maps scripts rviz
   DESTINATION share/${PROJECT_NAME}
 )
 
