@@ -4,8 +4,8 @@ Fake Unitree L2 LiDAR publisher for hazard_detection testing.
 Publishes sensor_msgs/PointCloud2 on /unilidar/cloud at 10 Hz in the
 unitree_lidar_link frame.  The cloud contains:
   - A flat ground plane (z=0) from x=-2..+4 m, y=-2..+2 m at 0.08 m grid
-  - 2 craters (depressions) at (1.5, 0.3) and (2.5, -0.5), z=-0.15 m
-  - 2 rocks   (bumps)      at (1.0, -0.4) and (3.0, 0.2),  z=+0.15 m
+  - 2 craters (depressions) at (-0.5, -1.5) and (-1.5, 1.0), z=-0.15 m
+  - 2 rocks   (bumps)      at (-0.3,  2.0) and (-1.2, -0.5), z=+0.15 m
 """
 
 import rclpy
@@ -36,12 +36,12 @@ class FakeLidarPublisher(Node):
         ZZ = np.zeros_like(XX)
 
         # Craters: depressions at given (cx, cy), radius 0.25 m, z = -0.15
-        for cx, cy in [(1.5, 0.3), (2.5, -0.5)]:
+        for cx, cy in [(-0.5, -1.5), (-1.5, 1.0)]:
             mask = np.sqrt((XX - cx) ** 2 + (YY - cy) ** 2) < 0.25
             ZZ[mask] = -0.15
 
         # Rocks: bumps at given (rx, ry), radius 0.20 m, z = +0.15
-        for rx, ry in [(1.0, -0.4), (3.0, 0.2)]:
+        for rx, ry in [(-0.3, 2.0), (-1.2, -0.5)]:
             mask = np.sqrt((XX - rx) ** 2 + (YY - ry) ** 2) < 0.20
             ZZ[mask] = 0.15
 
