@@ -4,7 +4,7 @@
 # =============================================================================
 
 # ---------------------------------------------------------------------------
-# Global Costmap — 5 layers, locked to full arena size 10x10m at 0.05m, 1 Hz
+# Global Costmap — 4 layers, locked to full arena size 10x10m at 0.05m, 1 Hz
 # ---------------------------------------------------------------------------
 global_costmap:
   global_costmap:
@@ -25,7 +25,6 @@ global_costmap:
         - static_layer
         - obstacle_layer
         - persistent_obstacle_layer
-        - hazard_layer
         - inflation_layer
 
       # Layer 1: arena static map from map_server
@@ -73,16 +72,7 @@ global_costmap:
           raytrace_max_range: 5.0
           raytrace_min_range: 0.0
 
-      # Layer 4: crater keepout grid — lethal injection from hazard_detection
-      hazard_layer:
-        plugin: "nav2_costmap_2d::StaticLayer"
-        enabled: true
-        map_topic: /hazards/craters/grid
-        map_subscribe_transient_local: false
-        subscribe_to_updates: true
-        transform_tolerance: 0.5
-
-      # Layer 5: inflate all lethal obstacles
+      # Layer 4: inflate all lethal obstacles
       inflation_layer:
         plugin: "nav2_costmap_2d::InflationLayer"
         enabled: true
